@@ -164,13 +164,54 @@ abstract class AbstractStandardPreference extends AbstractPreference
             }
         }
 
+        /** Modificación para permitir solo cuotas con el grupo lista 01 */
+        $excludedPaymentTypes = $this->getExcludedPaymentTypes();
+
         $paymentOptions = array(
             'installments' => (integer) $this->settings['MERCADOPAGO_INSTALLMENTS'],
-            'excluded_payment_types' => array(),
+            'excluded_payment_types' => $excludedPaymentTypes,
             'excluded_payment_methods' => $excludedPaymentMethods,
         );
 
         return $paymentOptions;
+    }
+
+    /**
+     * Función que según el grupo de usuario desactiva los pagos con tarjeta
+     * de crédito.
+     * Actualmente solo el grupo Lista 1 permite pagos con coutas.
+     *
+     * @return void
+     */
+    protected function getExcludedPaymentTypes() 
+    {
+        $context = Context::getContext();
+        $customer = $context->customer;
+
+        if (!$customer->isLogged()) {
+            return [];
+        }
+
+        $idLang = $this->context->language->id;
+        $defaultGroup = new Group($customer->id_default_group);
+        $groupName = strtolower(trim($defaultGroup->name[$idLang]));
+
+        if (strpos($groupName, 'lista') === false) {
+            return [];
+        }
+
+        $listaCustomer = (int)str_replace('lista ', '', $groupName);
+        
+        // si la lista es la uno salgo porque no tiene exclusiones.
+        if ($listaCustomer == 1) {
+            return [];
+        }
+
+        $excluded = [
+            ['id' => 'credit_card']
+        ];
+
+        return $excluded;
     }
 
     /**
