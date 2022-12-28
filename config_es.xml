@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>mercadopago</name>
+    <displayName><![CDATA[Mercado Pago]]></displayName>
+    <version><![CDATA[4.12.0]]></version>
+    <description><![CDATA[Personaliza la experiencia de pago de tus clientes y convierte tu sitio en una tienda online.]]></description>
+    <author><![CDATA[mercadopago]]></author>
+    <tab><![CDATA[payments_gateways]]></tab>
+	<confirmUninstall><![CDATA[¿Está seguro de que desea desinstalar el módulo?]]></confirmUninstall>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>
