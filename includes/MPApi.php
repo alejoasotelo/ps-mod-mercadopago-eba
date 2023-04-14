@@ -111,9 +111,8 @@ class MPApi
      */
     public function getPaymentMethods()
     {
-        $public_key = $this->getPublicKey();
-        $response = MPRestCli::get('/v1/bifrost/payment-methods', ["Authorization: " . $public_key]);
-
+        $access_token = $this->getAccessToken();
+        $response = MPRestCli::get('/v1/bifrost/payment-methods', ["Authorization: Bearer " . $access_token]);
 
 
         //in case of failures
@@ -129,7 +128,7 @@ class MPApi
 
         $payments = array();
         foreach ($result as $value) {
-            // remove on paypay release
+            //remove on paypay release
             if ($value['id'] == 'paypal') {
                 continue;
             }
