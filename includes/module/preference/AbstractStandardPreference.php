@@ -166,7 +166,7 @@ abstract class AbstractStandardPreference extends AbstractPreference
 
         /** Modificación para permitir solo cuotas con el grupo lista 01 */
         $excludedPaymentTypes = $this->getExcludedPaymentTypes();
-
+        
         $paymentOptions = array(
             'installments' => (integer) $this->settings['MERCADOPAGO_INSTALLMENTS'],
             'excluded_payment_types' => $excludedPaymentTypes,
@@ -183,7 +183,7 @@ abstract class AbstractStandardPreference extends AbstractPreference
      *
      * @return void
      */
-    protected function getExcludedPaymentTypes() 
+    protected function getExcludedPaymentTypes()
     {
         $context = Context::getContext();
         $customer = $context->customer;
@@ -192,7 +192,7 @@ abstract class AbstractStandardPreference extends AbstractPreference
             return [];
         }
 
-        $idLang = $this->context->language->id;
+        $idLang = $context->language->id;
         $defaultGroup = new Group($customer->id_default_group);
         $groupName = strtolower(trim($defaultGroup->name[$idLang]));
 
