@@ -159,7 +159,9 @@ abstract class AbstractStandardPreference extends AbstractPreference
      */
     public function getPaymentOptions()
     {
-        $excludedPaymentMethods = array();
+        $excludedPaymentMethods = array(
+            ['id' => 'wallet_qr'] // disactivo el pago con QR
+        );
         $paymentMethods = $this->mercadopago->getPaymentMethods();
 
         Configuration::updateValue('MERCADOPAGO_PAYMENT_ACCOUNT_MONEY', 'on');
