@@ -70,13 +70,13 @@ class MercadoPagoStandardValidationModuleFrontController extends ModuleFrontCont
 
                 $this->redirectCheck($payment_id);
             } else {
-                $this->redirectError();
+                $this->redirectError($typeReturn);
             }
 
             return;
         }
 
-        $this->redirectError();
+        $this->redirectError($typeReturn);
     }
 
     /**
@@ -143,9 +143,15 @@ class MercadoPagoStandardValidationModuleFrontController extends ModuleFrontCont
      *
      * @return void
      */
-    public function redirectError()
+    public function redirectError($type = '')
     {
-        MPLog::generate('The mercadopago checkout callback failed', 'error');
+        $msg = 'The mercadopago checkout callback failed';
+
+        if (!empty($type)) {
+            $msg .= ': ' . $type;
+        }
+
+        MPLog::generate($msg, 'error');
         Tools::redirect('index.php?controller=order&step=3&typeReturn=failure');
     }
 }
