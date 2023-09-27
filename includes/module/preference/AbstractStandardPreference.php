@@ -31,6 +31,8 @@ require_once MP_ROOT_URL . '/includes/module/preference/AbstractPreference.php';
 
 abstract class AbstractStandardPreference extends AbstractPreference
 {
+    const DESCUENTO_MAXIMO_PARA_TC = 5; // 5%
+
     public $mpuseful;
 
     /**
@@ -177,7 +179,9 @@ abstract class AbstractStandardPreference extends AbstractPreference
             }
         }
 
-        /** Modificación para permitir solo cuotas con el grupo lista 01 */
+        /** Modificación para permitir solo cuotas con el grupo lista 01 sin 
+         * descuento o con descuento menor o igual 5% 
+         * */
         $excludedPaymentTypes = $this->getExcludedPaymentTypes();
         
         $paymentOptions = array(
@@ -192,17 +196,64 @@ abstract class AbstractStandardPreference extends AbstractPreference
     /**
      * Función que según el grupo de usuario desactiva los pagos con tarjeta
      * de crédito.
-     * Actualmente solo el grupo Lista 1 permite pagos con coutas.
+     * Actualmente solo el grupo Lista 1 permite pagos con coutas si no tiene un descuento mayor al 5%.
      *
      * @return void
      */
     protected function getExcludedPaymentTypes()
     {
+        $listaCustomer = $this->getListaCliente();
+
+        if (($listaCustomer == 1 && $this->cartHasDescuentoCartMoreThan(self::DESCUENTO_MAXIMO_PARA_TC)) || $listaCustomer >= 2) {
+            return [
+                ['id' => 'credit_card']
+            ];
+        }
+
+        return [];
+    }
+
+    /**
+     * Obtiene el descuento automático que tiene EBA por listas
+     * y devuelve la descripción
+     *
+     * @return float
+     */
+    public function cartHasDescuentoCartMoreThan($descuento)
+    {
+        $context = Context::getContext();
+        $cart = $context->cart;
+        $cartRules = $cart->getCartRules();
+
+        if (!count($cartRules)) {
+            return false;
+        }
+
+        foreach ($cartRules as $cartRule) {
+            $hasReduction = isset($cartRule['obj']->reduction_percent) && $cartRule['obj']->reduction_percent > 0;
+            $currentDescuento = $hasReduction ? (float)$cartRule['obj']->reduction_percent : (float)$cartRule->reduction_percent;
+            if ($currentDescuento  > $descuento) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Función que devuelve el número de lista del cliente logueado.
+     * Si no está logueado devuelve 0.
+     * Si no tiene lista devuelve 0.
+     *
+     * @return int
+     */
+    protected function getListaCliente()
+    {
         $context = Context::getContext();
         $customer = $context->customer;
 
         if (!$customer->isLogged()) {
-            return [];
+            return 0;
         }
 
         $idLang = $context->language->id;
@@ -210,21 +261,10 @@ abstract class AbstractStandardPreference extends AbstractPreference
         $groupName = strtolower(trim($defaultGroup->name[$idLang]));
 
         if (strpos($groupName, 'lista') === false) {
-            return [];
+            return $this->cache[$cacheId];
         }
 
-        $listaCustomer = (int)str_replace('lista ', '', $groupName);
-        
-        // si la lista es la uno salgo porque no tiene exclusiones.
-        if ($listaCustomer == 1) {
-            return [];
-        }
-
-        $excluded = [
-            ['id' => 'credit_card']
-        ];
-
-        return $excluded;
+        return (int)str_replace('lista ', '', $groupName);
     }
 
     /**
