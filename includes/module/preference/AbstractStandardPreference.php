@@ -27,6 +27,10 @@
  * to avoid any conflicts with others containers.
  */
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 require_once MP_ROOT_URL . '/includes/module/preference/AbstractPreference.php';
 
 abstract class AbstractStandardPreference extends AbstractPreference
@@ -100,17 +104,6 @@ abstract class AbstractStandardPreference extends AbstractPreference
         );
 
         return array_merge($payloadParent, $payloadAdditional);
-    }
-
-    /**
-     * Get calculate decimal
-     *
-     * @param $round, $unit_price
-     * @return mixed
-     */
-    public function getCalculateDecimalUnitPrice($round, $unit_price)
-    {
-        return $round ? Tools::ps_round($unit_price) : Tools::ps_round($unit_price, 2);
     }
 
     /**

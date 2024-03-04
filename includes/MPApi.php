@@ -27,6 +27,10 @@
  * to avoid any conflicts with others containers.
  */
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class MPApi
 {
     public function __construct()
@@ -130,7 +134,7 @@ class MPApi
 
         $payments = array();
         foreach ($result as $value) {
-            //remove on paypay release
+            // remove on paypay release
             if ($value['id'] == 'paypal') {
                 continue;
             }
