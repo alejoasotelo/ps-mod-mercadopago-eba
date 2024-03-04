@@ -179,12 +179,13 @@ abstract class AbstractStandardPreference extends AbstractPreference
             }
         }
 
-        /** Modificación para permitir solo cuotas con el grupo lista 01 sin 
-         * descuento o con descuento menor o igual 5% 
-         * */
+        /** Modificación para permitir solo cuotas al grupo Lista 01 
+         * con descuento menor al 5% o sin descuento y Lista 02.
+        */
         $excludedPaymentTypes = $this->getExcludedPaymentTypes();
         
         $paymentOptions = array(
+            // Si es lista 1 dejo la config. sino 1 solo pago
             'installments' => (int) $this->settings['MERCADOPAGO_INSTALLMENTS'],
             'excluded_payment_types' => $excludedPaymentTypes,
             'excluded_payment_methods' => $excludedPaymentMethods,
@@ -198,7 +199,7 @@ abstract class AbstractStandardPreference extends AbstractPreference
      * de crédito.
      * Actualmente solo el grupo Lista 1 permite pagos con coutas si no tiene un descuento mayor al 5%.
      *
-     * @return void
+     * @return array
      */
     protected function getExcludedPaymentTypes()
     {
