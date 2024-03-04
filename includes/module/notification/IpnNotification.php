@@ -75,7 +75,7 @@ class IpnNotification extends AbstractNotification
                 $this->updateOrderTransaction($order);
                 $this->updateOrder($cart);
             }
-        } elseif (count($this->merchant_order['payments']) > 0) {
+        } else {
             $this->createStandardOrder($cart);
         }
     }
