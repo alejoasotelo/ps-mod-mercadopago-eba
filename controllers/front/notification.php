@@ -33,6 +33,7 @@ if (!defined('_PS_VERSION_')) {
 
 require_once MP_ROOT_URL . '/includes/module/notification/IpnNotification.php';
 require_once MP_ROOT_URL . '/includes/module/notification/WebhookNotification.php';
+require_once MP_ROOT_URL . '/includes/MpMutex.php';
 
 class MercadoPagoNotificationModuleFrontController extends ModuleFrontController
 {
@@ -56,6 +57,13 @@ class MercadoPagoNotificationModuleFrontController extends ModuleFrontController
         $secure_key = Tools::getValue('customer');
         $transaction_id = Tools::getValue('id');
 
+        $mutex = new MpMutex('mpk_validation');
+        
+        while (!$mutex->lock()) {
+            sleep(.5);
+        }
+        MPLog::generate('--------NOTIFICATION URL: ' . $urlRequest . '---- Lock ----');
+
         //Validate checkout notification
         if ($checkout == 'standard' && $topic == 'merchant_order') {
             $this->processIpnNotification($transaction_id, $secure_key);
@@ -64,6 +72,9 @@ class MercadoPagoNotificationModuleFrontController extends ModuleFrontController
         } else {
             $this->getErrorResponse();
         }
+
+        $mutex->releaseLock();
+        MPLog::generate('--------NOTIFICATION URL: ' . $urlRequest . '---- Release lock ----');
     }
 
     /**
