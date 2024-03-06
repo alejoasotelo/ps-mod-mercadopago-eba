@@ -50,7 +50,6 @@ class MercadoPagoNotificationModuleFrontController extends ModuleFrontController
     public function initContent()
     {
         $urlRequest = $_SERVER['REQUEST_URI'];
-        MPLog::generate('--------NOTIFICATION URL: ' . $urlRequest . '--------');
 
         $topic = Tools::getValue('topic');
         $checkout = Tools::getValue('checkout');
