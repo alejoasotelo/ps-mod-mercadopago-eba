@@ -417,9 +417,9 @@ class Mercadopago extends PaymentModule
      */
     public function hookHeader()
     {
-        $this->context->controller->addCSS($this->_path . 'views/css/front' . $this->assets_ext_min . '.css');
-        $this->context->controller->addCSS($this->_path . 'views/css/pixFront' . $this->assets_ext_min . '.css');
-        $this->context->controller->addJS($this->_path . 'views/js/front' . $this->assets_ext_min . '.js');
+        // $this->context->controller->addCSS($this->_path . 'views/css/front' . $this->assets_ext_min . '.css');
+        // $this->context->controller->addCSS($this->_path . 'views/css/pixFront' . $this->assets_ext_min . '.css');
+        // $this->context->controller->addJS($this->_path . 'views/js/front' . $this->assets_ext_min . '.js');
     }
 
     /**
