@@ -17,8 +17,8 @@ $_MODULE['<{mercadopago}prestashop>mercadopago_bf40a1c10d0b4a9cb26a27593226285b'
 $_MODULE['<{mercadopago}prestashop>mercadopago_53b4d02529d11ed85eb327d5297ec1ca'] = 'Transacción Pendiente';
 $_MODULE['<{mercadopago}prestashop>mercadopago_2b39c27da5542ec1a72d8151ac607cd7'] = 'Transacción Autorizada';
 $_MODULE['<{mercadopago}prestashop>mercadopago_0904cef9b07116065dcd547e31c99e24'] = 'Transacción en Posible Fraude';
-$_MODULE['<{mercadopago}prestashop>mercadopago_3e8bd808fa886bce4b3de20f28870f9d'] = 'Pagar con Mercado Pago';
-$_MODULE['<{mercadopago}prestashop>mercadopago_f4818b8be3fb0dcad10b46475db2efa1'] = ' Paga con tarjetas de crédito y débito';
+$_MODULE['<{mercadopago}prestashop>mercadopago_3e8bd808fa886bce4b3de20f28870f9d'] = 'Pagar con ';
+$_MODULE['<{mercadopago}prestashop>mercadopago_f4818b8be3fb0dcad10b46475db2efa1'] = 'Paga con tarjetas de crédito y débito';
 $_MODULE['<{mercadopago}prestashop>mercadopago_5edffb5efe684d534217bad198adeece'] = 'Paga con medios de pago en efectivo';
 $_MODULE['<{mercadopago}prestashop>mercadopago_125ecb74bf3c3ae52c703a59dcf9bed7'] = 'Pix';
 $_MODULE['<{mercadopago}prestashop>mercadopago_640fd0cc0ffa0316ae087652871f4486'] = 'minutos';
