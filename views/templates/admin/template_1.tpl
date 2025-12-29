@@ -120,8 +120,8 @@
 </div>
 
 <!-- forms rendered via class from mercadopago.php -->
-{html_entity_decode($country_form|escape:'html':'UTF-8')}
-{html_entity_decode($credentials|escape:'html':'UTF-8')}
+{$country_form nofilter}
+{$credentials nofilter}
 
 {if $access_token != '' && $public_key != ''  && $sandbox_access_token != '' && $sandbox_public_key != ''}
 
