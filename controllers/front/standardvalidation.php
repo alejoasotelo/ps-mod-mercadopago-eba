@@ -32,6 +32,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 require_once MP_ROOT_URL . '/includes/module/notification/IpnNotification.php';
+require_once MP_ROOT_URL . '/includes/MpMutex.php';
 
 class MercadoPagoStandardValidationModuleFrontController extends ModuleFrontController
 {
@@ -94,7 +95,15 @@ class MercadoPagoStandardValidationModuleFrontController extends ModuleFrontCont
             $cart_id = $payment['external_reference'];
             $transaction_id = $payment['order']['id'];
             $cart = new Cart($cart_id);
+
+            $mutex = new MpMutex('mpk_validation');
+            while (!$mutex->lock()) {
+                usleep(500000);
+            }
+
             $order = $this->createOrder($cart, $transaction_id);
+
+            $mutex->releaseLock();
 
             $this->redirectOrderConfirmation($cart, $order);
         }
