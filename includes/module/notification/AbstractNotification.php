@@ -38,7 +38,7 @@ class AbstractNotification
      * short of the order total without being treated as underpaid/fraud.
      * Covers rounding cent differences that favor the customer.
      */
-    const AMOUNT_DIFFERENCE_TOLERANCE = 0.05;
+    const AMOUNT_DIFFERENCE_TOLERANCE = 1;
 
     public $total;
     public $module;
