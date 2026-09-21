@@ -34,9 +34,10 @@ if (!defined('_PS_VERSION_')) {
 class AbstractNotification
 {
     /**
-     * Max amount (in the store's currency) that the approved payment can fall
-     * short of the order total without being treated as underpaid/fraud.
-     * Covers rounding cent differences that favor the customer.
+     * Max amount (in the store's currency) that the paid amount can differ
+     * from the order total, in either direction, and still be treated as
+     * fully paid. Covers rounding cent differences, whether they favor the
+     * customer or the store.
      */
     const AMOUNT_DIFFERENCE_TOLERANCE = 1;
 
@@ -120,7 +121,7 @@ class AbstractNotification
     {
         try {
             $order_payments = $order->getOrderPaymentCollection();
-            $order_payments[0]->amount = $this->approved;
+            $order_payments[0]->amount = $this->reconcileAmount($this->approved);
             $order_payments[0]->update();
         } catch (Exception $e) {
             MPLog::generate('Error on update order transaction: ' . $e->getMessage(), 'error');
@@ -140,7 +141,7 @@ class AbstractNotification
             $this->module->validateOrder(
                 $cart->id,
                 $this->order_state,
-                $this->mp_transaction_amount,
+                $this->reconcileAmount($this->mp_transaction_amount),
                 "Mercado Pago",
                 null,
                 array(),
@@ -551,6 +552,24 @@ class AbstractNotification
         }
 
         return Tools::ps_round($correctedTotal['amount'], 2);
+    }
+
+    /**
+     * Snap an amount to the order total when they're within the tolerance
+     * margin, so a rounding cent difference (in either direction) doesn't
+     * leave the order registered with a paid amount that doesn't match its
+     * total.
+     *
+     * @param  float $amount
+     * @return float
+     */
+    public function reconcileAmount($amount)
+    {
+        if ($this->total > 0 && abs($this->total - $amount) <= self::AMOUNT_DIFFERENCE_TOLERANCE) {
+            return $this->total;
+        }
+
+        return $amount;
     }
 
     /**
