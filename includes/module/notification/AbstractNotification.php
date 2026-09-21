@@ -121,7 +121,7 @@ class AbstractNotification
     {
         try {
             $order_payments = $order->getOrderPaymentCollection();
-            $order_payments[0]->amount = $this->reconcileAmount($this->approved);
+            $order_payments[0]->amount = $this->approved;
             $order_payments[0]->update();
         } catch (Exception $e) {
             MPLog::generate('Error on update order transaction: ' . $e->getMessage(), 'error');
@@ -141,7 +141,7 @@ class AbstractNotification
             $this->module->validateOrder(
                 $cart->id,
                 $this->order_state,
-                $this->reconcileAmount($this->mp_transaction_amount),
+                $this->mp_transaction_amount,
                 "Mercado Pago",
                 null,
                 array(),
@@ -552,24 +552,6 @@ class AbstractNotification
         }
 
         return Tools::ps_round($correctedTotal['amount'], 2);
-    }
-
-    /**
-     * Snap an amount to the order total when they're within the tolerance
-     * margin, so a rounding cent difference (in either direction) doesn't
-     * leave the order registered with a paid amount that doesn't match its
-     * total.
-     *
-     * @param  float $amount
-     * @return float
-     */
-    public function reconcileAmount($amount)
-    {
-        if ($this->total > 0 && abs($this->total - $amount) <= self::AMOUNT_DIFFERENCE_TOLERANCE) {
-            return $this->total;
-        }
-
-        return $amount;
     }
 
     /**
