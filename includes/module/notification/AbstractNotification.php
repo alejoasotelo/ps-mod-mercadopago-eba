@@ -34,9 +34,10 @@ if (!defined('_PS_VERSION_')) {
 class AbstractNotification
 {
     /**
-     * Max amount (in the store's currency) that the approved payment can fall
-     * short of the order total without being treated as underpaid/fraud.
-     * Covers rounding cent differences that favor the customer.
+     * Max amount (in the store's currency) that the paid amount can differ
+     * from the order total, in either direction, and still be treated as
+     * fully paid. Covers rounding cent differences, whether they favor the
+     * customer or the store.
      */
     const AMOUNT_DIFFERENCE_TOLERANCE = 2;
 
