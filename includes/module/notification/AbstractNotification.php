@@ -33,6 +33,13 @@ if (!defined('_PS_VERSION_')) {
 
 class AbstractNotification
 {
+    /**
+     * Max amount (in the store's currency) that the approved payment can fall
+     * short of the order total without being treated as underpaid/fraud.
+     * Covers rounding cent differences that favor the customer.
+     */
+    const AMOUNT_DIFFERENCE_TOLERANCE = 1;
+
     public $total;
     public $module;
     public $status;
@@ -89,7 +96,7 @@ class AbstractNotification
     public function validateOrderState()
     {
         if ($this->status != null) {
-            if ($this->total > 0 && $this->approved >= $this->total) {
+            if ($this->total > 0 && $this->approved >= $this->total - self::AMOUNT_DIFFERENCE_TOLERANCE) {
                 $this->amount = $this->approved;
                 $this->order_state = $this->getNotificationPaymentState('approved');
             } elseif ($this->total > 0 && $this->pending >= $this->total) {
@@ -255,7 +262,7 @@ class AbstractNotification
         if ($actual_status == $status) {
             MPLog::generate('Order status is the same', 'warning');
             $this->getNotificationResponse('Order status is the same', 202);
-        } elseif ($this->total > $this->approved) {
+        } elseif ($this->total - $this->approved > self::AMOUNT_DIFFERENCE_TOLERANCE) {
             $this->ruleFraud($cart, $order, $actual_status, $validate_actual);
         } elseif ($validate_actual == true) {
             $this->updatePrestashopOrder($cart, $order);
