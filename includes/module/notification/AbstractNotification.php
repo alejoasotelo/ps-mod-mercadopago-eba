@@ -38,13 +38,13 @@ class AbstractNotification
      * short of the order total without being treated as underpaid/fraud.
      * Covers rounding cent differences that favor the customer.
      */
-    const AMOUNT_DIFFERENCE_TOLERANCE = 1;
+    const AMOUNT_DIFFERENCE_TOLERANCE = 2;
 
     public $total;
     public $module;
     public $status;
     public $amount;
-    public $aproved;
+    public $approved;
     public $pending;
     public $order_id;
     public $mercadopago;
