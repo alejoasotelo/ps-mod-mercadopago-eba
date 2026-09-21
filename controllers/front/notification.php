@@ -59,7 +59,7 @@ class MercadoPagoNotificationModuleFrontController extends ModuleFrontController
         $mutex = new MpMutex('mpk_validation');
         
         while (!$mutex->lock()) {
-            sleep(.5);
+            usleep(500000);
         }
         MPLog::generate('--------NOTIFICATION URL: ' . $urlRequest . '---- Lock ----');
 
