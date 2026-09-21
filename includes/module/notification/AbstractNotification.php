@@ -39,13 +39,13 @@ class AbstractNotification
      * fully paid. Covers rounding cent differences, whether they favor the
      * customer or the store.
      */
-    const AMOUNT_DIFFERENCE_TOLERANCE = 1;
+    const AMOUNT_DIFFERENCE_TOLERANCE = 2;
 
     public $total;
     public $module;
     public $status;
     public $amount;
-    public $aproved;
+    public $approved;
     public $pending;
     public $order_id;
     public $mercadopago;
